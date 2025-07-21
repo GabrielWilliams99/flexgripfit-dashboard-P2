@@ -1,30 +1,29 @@
-const flexProducts = [
-  {
-    name: 'Adjustable Dumbbells',
-    price: 12999,
-    img: 'https://placehold.co/600x400?text=Adjustable+Dumbbells'
-  },
-  {
-    name: 'FlexGrip Resistance Bands',
-    price: 1999,
-    img: 'https://placehold.co/600x400?text=Resistance+Bands'
-  },
-  {
-    name: 'Premium Yoga Mat',
-    price: 3499,
-    img: 'https://placehold.co/600x400?text=Yoga+Mat'
-  },
-  {
-    name: 'Weighted Jump Rope',
-    price: 2499,
-    img: 'https://placehold.co/600x400?text=Jump+Rope'
-  },
-  {
-    name: 'Push-Up Bars',
-    price: 2999,
-    img: 'https://placehold.co/600x400?text=Push-Up+Bars'
+function fetchProductsThen() {
+  fetch('https://www.course-api.com/javascript-store-products')
+    .then((response) => response.json())
+    .then((data) => {
+      data.forEach((product) => {
+        console.log(product.fields.name);
+      });
+    })
+    .catch((error) => {
+      console.error('Fetch error (then):', error);
+    });
+}
+
+async function fetchProductsAsync() {
+  try {
+    const response = await fetch('https://www.course-api.com/javascript-store-products');
+    const data = await response.json();
+    displayProducts(data.slice(0, 5).map((p) => ({
+      name: p.fields.name,
+      price: p.fields.price,
+      img: p.fields.image[0].url
+    })));
+  } catch (error) {
+    handleError(error);
   }
-];
+}
 
 function displayProducts(products) {
   const container = document.getElementById('product-container');
@@ -46,4 +45,9 @@ function displayProducts(products) {
   });
 }
 
-displayProducts(flexProducts);
+function handleError(error) {
+  console.error('An error occurred:', error.message);
+}
+
+fetchProductsThen();
+fetchProductsAsync();
